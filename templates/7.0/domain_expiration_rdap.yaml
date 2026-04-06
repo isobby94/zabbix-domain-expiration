@@ -1,0 +1,24 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: c4557c2eaba44b3da425ac7636e35e74
+      name: Templates
+  templates:
+    - uuid: 54568140562c40d3a2570a15e09a0c84
+      template: 'Domain Expiration RDAP'
+      name: 'Domain Expiration RDAP'
+      groups:
+        - name: Templates
+      items:
+        - uuid: b37c186b4e78451daa4b7c280645a1ba
+          name: 'Domain expires'
+          key: 'domain.expire.rdap[{HOSTNAME}]'
+          delay: 1h
+          triggers:
+            - uuid: 64b0a3c58d1543219ceafb22b4f4e4b7
+              expression: 'last(/Domain Expiration RDAP/domain.expire.rdap[{HOSTNAME}])<={$DOMAIN.EXPIRE.CRIT}'
+              name: 'Domain {HOST.NAME} expires after {ITEM.VALUE} days'
+              priority: DISASTER
+      macros:
+        - macro: '{$DOMAIN.EXPIRE.CRIT}'
+          value: '30'

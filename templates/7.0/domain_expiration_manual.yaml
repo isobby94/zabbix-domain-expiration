@@ -1,0 +1,24 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: 9fd268c8da204aa4be16ffb591159214
+      name: Templates
+  templates:
+    - uuid: d8f9bcb419804e10ac34775d7f02bc93
+      template: 'Domain Expiration Manual'
+      name: 'Domain Expiration Manual'
+      groups:
+        - name: Templates
+      items:
+        - uuid: 916c29181d7f465399df0377c7a5f9ab
+          name: 'Domain expires'
+          key: 'domain.expire.manual[{HOSTNAME}]'
+          delay: 1h
+          triggers:
+            - uuid: 699aa9d2dd434fb8bf6034b629670a8b
+              expression: 'last(/Domain Expiration Manual/domain.expire.manual[{HOSTNAME}])<={$DOMAIN.EXPIRE.CRIT}'
+              name: 'Domain {HOST.NAME} expires after {ITEM.VALUE} days'
+              priority: DISASTER
+      macros:
+        - macro: '{$DOMAIN.EXPIRE.CRIT}'
+          value: '30'
